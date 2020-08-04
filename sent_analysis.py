@@ -6,7 +6,7 @@ class SentimentAnalys:
         self.answer = answer
     
     def sent_neg_pos_neur(self, polarity):
-        return "Positive" if polarity > 0.0 else "Negative" if polarity < 0.0 else "Neural"
+        return "Positive" if polarity > 0.25 else "Negative" if polarity < -0.25 else "Neural"
 
     def sent_analys(self):
         blob = TextBlob(self.answer)
