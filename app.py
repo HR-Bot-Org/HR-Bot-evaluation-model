@@ -1,5 +1,6 @@
 from flask import Flask, request, abort, jsonify
 from evaluator import Evaulator
+from feedback import FeedBack
 
 evaluator = Evaulator()
 app = Flask(__name__)
@@ -21,6 +22,17 @@ def evaluation():
     return jsonify({'score': str(score)}), 200
 
 
+@app.route('/feedback')
+def feedback():
+    if not request.json or not 'skill' in request.json or not 'question' in request.json:
+        abort(400)
+
+    skill = str(request.json['skill'])
+    question = str(request.json['question'])
+
+    f = FeedBack(skill, question)
+    my_feedback = f.search()
+    return jsonify({'feedback': str(my_feedback)}), 200
 
 
 if __name__ == "__main__":
