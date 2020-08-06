@@ -1,38 +1,55 @@
 from flask import Flask, request, abort, jsonify
-from evaluator import Evaulator
+# from evaluator import Evaulator
 from feedback import FeedBack
 
-evaluator = Evaulator()
+# evaluator = Evaulator()
 app = Flask(__name__)
 
 @app.route('/')
 def index():
     return "Machine Learning Models For HR-Bot"
 
-@app.route('/evaluate')
-def evaluation():
-    if not request.json or not 'answers' in request.json or not 'applicant_answer' in request.json:
-        abort(400)
+# @app.route('/evaluate')
+# def evaluation():
+#     if not request.json or not 'answers' in request.json or not 'applicant_answer' in request.json:
+#         abort(400)
 
-    model_answers = list(request.json['answers'])
-    applicant_answer = str(request.json['applicant_answer'])
-    answers = model_answers
-    answers.append(applicant_answer)
-    score = evaluator.evalute_applicant_answer(answers)
-    return jsonify({'score': str(score)}), 200
+#     model_answers = list(request.json['answers'])
+#     applicant_answer = str(request.json['applicant_answer'])
+#     answers = model_answers
+#     answers.append(applicant_answer)
+#     score = evaluator.evalute_applicant_answer(answers)
+#     return jsonify({'score': str(score)}), 200
 
 
-@app.route('/feedback')
+# intput example : 
+# {
+#     "data" :
+#     {
+#         "question": "what is the desicion tree", 
+#         "skills": 
+#         [
+#             {
+#                 "name": "machine learning",
+#                 "site": "www.datacamp.com"
+#             },
+#             {
+#                 "name": "object oriented",
+#                 "site":"www.datacamp.com"
+#             }
+#         ]
+#     }
+# }
+@app.route('/interview/feedback')
 def feedback():
-    if not request.json or not 'skill' in request.json or not 'question' in request.json:
+    if not request.json or not 'data' in request.json:
         abort(400)
 
-    skill = str(request.json['skill'])
-    question = str(request.json['question'])
-
-    f = FeedBack(skill, question)
+    data = (request.json['data'])
+    f = FeedBack(data=data)
     my_feedback = f.search()
-    return jsonify({'feedback': str(my_feedback)}), 200
+
+    return jsonify({'feedback': my_feedback}), 200
 
 
 if __name__ == "__main__":
