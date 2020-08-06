@@ -3,106 +3,134 @@ from googlesearch import search
 
 class Parser:
 
-    def __init__(self, skill):
-        self.skill = skill
+    def __init__(self, skills):
+        self.skills = skills
 
-    def parseForCoursera(self):
-        senteces = self.skill.split()
-        search_key = ''
+    def parse(self, sign):
+        sentences = []
+        for skill in self.skills:
+            sentences.append(skill['name'].split())
         
-        for i in range(len(senteces)-1):
-            search_key+=senteces[i]
-            search_key+='%20'
-        search_key+= senteces[i+1]
-
-        return search_key
-
-    def parseForUdemy(self):
-        senteces = self.skill.split()
+        search_keys = []
         search_key = ''
-        
-        for i in range(len(senteces)-1):
-            search_key+=senteces[i]
-            search_key+='+'
-        search_key+= senteces[i+1]
 
-        return search_key
+        for sentence in sentences:
+            for i in range(len(sentences)-1):
+                search_key += sentence[i]
+                search_key += sign
+            search_key += sentence[-1]
+            search_keys.append(search_key)
+            search_key = ''
 
-    def parseForPuralsight(self):
-        return Parser.parseForCoursera(self)
-
-    def parseForLynda(self):
-        return Parser.parseForUdemy(self)
+        return search_keys
 
 class FeedBack:
-
     
-    def __init__(self, skill, question):
-        self.skill = skill
-        self.question = question
-        self.webSitesDictionary = {
-            'Algorithms': ['www.geeksforgeeks.org'],
-            'DataBase': ['www.w3schools.com'],
-            'SoftWareEngineering': ['www.tutorialspoint.com', 'stackoverflow.com'],
-            'DataScience': ['www.datacamp.com'],
-            'machine learning': ['www.datacamp.com']
-            }
+    def __init__(self, data):
+        self.skills = data['skills']
+        self.question = data['question']
+
+        
 
     #Done
     def wikipediaSearch(self):
+        result = ''
         wiki_wiki = wikipediaapi.Wikipedia('en')
-        page_py = wiki_wiki.page(self.skill)
-        print(page_py.summary)
-    
-    def googleSearch(self):
-        skill = self.skill
-        sites = self.webSitesDictionary[skill]
-        question = self.question
+        page_question = wiki_wiki.page(self.question)
+        skills = self.skills
+        
+        for skill in skills:
+            x = wiki_wiki.page(skill['name'])
+            result +=x.summary
+            result +='\n'
 
-        for site in sites:
-	        query = 'site:' + site + ' ' + question + ' + ' + skill
-	        for j in search(query, tld="com", num=10, stop=1, pause=2): 
-		        print(j) 
+        return page_question.summary + '\n' + result
     
     #Done
+    def googleSearch(self):
+        skills = self.skills
+        question = self.question
+        result = ''
+
+        for skill in skills:
+            query = 'site:' + skill['site'] + ' ' + question + ' + ' + skill['name']
+            for j in search(query, tld="com", num=10, stop=1, pause=2): 
+                result +=str(j) 
+
+        return result
+
+    #Done
     def courseraSearch(self):
-        p = Parser(self.skill)
-        search_key = p.parseForCoursera()
-        link = 'https://www.coursera.org/search?query=' + search_key
-        print(link)
+        p = Parser(self.skills)
+        search_keys = p.parse('%20')
+        links = []
+        result = ''
+        for search_key in search_keys:
+            link = 'https://www.coursera.org/search?query=' + search_key
+            links.append(link)
+        
+        for link in links :
+            result+=link ; result+='\n'
+
+        return result
 
     #Done
     def udemySearch(self):
-        p=Parser(self.skill)
-        search_key = p.parseForUdemy()
-        link = 'https://www.udemy.com/courses/search/?q=' + search_key
-        print(link)
+        p = Parser(self.skills)
+        search_keys = p.parse('+')
+        links = []
+        result = ''
+        for search_key in search_keys:
+            link = 'https://www.udemy.com/courses/search/?q=' + search_key
+            links.append(link)
+        
+        for link in links :
+            result+=link ; result+='\n'
+
+        return result
     
     #Done
     def pluralsightSearch(self):
-        p=Parser(self.skill)
-        search_key  = p.parseForPuralsight()
-        link = 'https://www.pluralsight.com/search?q=' + search_key
-        print(link)
+        p = Parser(self.skills)
+        search_keys = p.parse('%20')
+        links = []
+        result = ''
+        for search_key in search_keys:
+            link = 'https://www.pluralsight.com/search?q=' + search_key
+            links.append(link)
+        
+        for link in links :
+            result+=link ; result+='\n'
 
+        return result
+
+    #Done
     def lyndaSearch(self):
-        p=Parser(self.skill)
-        search_key  = p.parseForLynda()
-        link = 'https://www.lynda.com/search?q=' + search_key
-        print(link)
+        p = Parser(self.skills)
+        search_keys = p.parse('%20')
+        links = []
+        result = ''
+        for search_key in search_keys:
+            link = 'https://www.lynda.com/search?q=' + search_key
+            links.append(link)
+        
+        for link in links :
+            result+=link ; result+='\n'
+
+        return result
 
     def search(self):
-        print('you want to emprove your '+ self.skill + ' skills\nso we present some titles, documents and courses to help you\n\n')
-        self.wikipediaSearch()
-        self.googleSearch()
-        self.courseraSearch()
-        self.udemySearch()
-        self.pluralsightSearch()
-        self.lyndaSearch()
+        result = ''
+        result += self.wikipediaSearch() ; result+= '\n'
+        result += self.googleSearch() ; result+= '\n'
+        result += self.courseraSearch() ; result+= '\n'
+        result += self.udemySearch() ; result+= '\n'
+        result += self.pluralsightSearch() ; result+= '\n'
+        result += self.lyndaSearch() ; result+= '\n'
+
+        return result
 
 # p = Parser('machine learning andrew eg')
-# print(p.parseForCoursera())
+# print(    p.parseForCoursera())
 if __name__ == "__main__":
-    
-    f = FeedBack('machine learning', 'what is the decision tree' )
-    f.search()
+    pass
