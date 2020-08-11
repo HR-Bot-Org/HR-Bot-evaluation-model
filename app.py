@@ -9,17 +9,21 @@ app = Flask(__name__)
 def index():
     return "Machine Learning Models For HR-Bot"
 
-# @app.route('/evaluate')
-# def evaluation():
-#     if not request.json or not 'answers' in request.json or not 'applicant_answer' in request.json:
-#         abort(400)
+@app.route('/evaluate')
+def evaluation():
+    if not request.json or not 'token' in request.json or not 'answers' in request.json or not 'applicant_answer' in request.json:
+        abort(400)
 
-#     model_answers = list(request.json['answers'])
-#     applicant_answer = str(request.json['applicant_answer'])
-#     answers = model_answers
-#     answers.append(applicant_answer)
-#     score = evaluator.evalute_applicant_answer(answers)
-#     return jsonify({'score': str(score)}), 200
+    token = str(request.json["token"])
+    if not(token == "hr_bot_2019_2020"):
+        abort(404)
+    else:
+        model_answers = list(request.json['answers'])
+        applicant_answer = str(request.json['applicant_answer'])
+        answers = model_answers
+        answers.append(applicant_answer)
+        score = evaluator.evalute_applicant_answer(answers)
+        return jsonify({'score': str(score)}), 200
 
 
 # intput example : 
