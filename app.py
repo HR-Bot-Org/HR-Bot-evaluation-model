@@ -37,7 +37,8 @@ def index():
 #                 "name": "object oriented",
 #                 "site":"www.datacamp.com"
 #             }
-#         ]
+#         ],
+#         "token": "hr_bot_2019_2020"
 #     }
 # }
 @app.route('/interview/feedback')
@@ -49,7 +50,11 @@ def feedback():
     f = FeedBack(data=data)
     my_feedback = f.search()
 
-    return jsonify({'feedback': my_feedback}), 200
+    if my_feedback is None:
+        abort(404)
+        return "This should not be returned"
+    else:
+        return jsonify({'feedback': my_feedback}), 200
 
 
 if __name__ == "__main__":
