@@ -9,7 +9,7 @@ app = Flask(__name__)
 def index():
     return "Machine Learning Models For HR-Bot"
 
-@app.route('/evaluate')
+@app.route('/evaluate', methods=['POST'])
 def evaluation():
     if not request.json or not 'token' in request.json or not 'answers' in request.json or not 'applicant_answer' in request.json:
         abort(400)
@@ -45,7 +45,7 @@ def evaluation():
 #         "token": "hr_bot_2019_2020"
 #     }
 # }
-@app.route('/interview/feedback')
+@app.route('/interview/feedback', methods=['POST'])
 def feedback():
     if not request.json or not 'data' in request.json:
         abort(400)
