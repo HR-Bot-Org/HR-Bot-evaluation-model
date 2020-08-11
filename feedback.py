@@ -1,5 +1,6 @@
 import wikipediaapi
 from googlesearch import search
+# from flask import render_template
 
 class Parser:
 
@@ -29,6 +30,7 @@ class FeedBack:
     def __init__(self, data):
         self.skills = data['skills']
         self.question = data['question']
+        self.token = data['token']
 
         
 
@@ -120,15 +122,20 @@ class FeedBack:
         return result
 
     def search(self):
-        result = ''
-        result += self.wikipediaSearch() ; result+= '\n'
-        result += self.googleSearch() ; result+= '\n'
-        result += self.courseraSearch() ; result+= '\n'
-        result += self.udemySearch() ; result+= '\n'
-        result += self.pluralsightSearch() ; result+= '\n'
-        result += self.lyndaSearch() ; result+= '\n'
+        token = self.token 
+        if token == "hr_bot_2019_2020":    
+            result = ''
+            result += self.wikipediaSearch() ; result+= '\n'
+            result += self.googleSearch() ; result+= '\n'
+            result += self.courseraSearch() ; result+= '\n'
+            result += self.udemySearch() ; result+= '\n'
+            result += self.pluralsightSearch() ; result+= '\n'
+            result += self.lyndaSearch() ; result+= '\n'
+            
+            return result
 
-        return result
+        else:
+            return None
 
 # p = Parser('machine learning andrew eg')
 # print(    p.parseForCoursera())
