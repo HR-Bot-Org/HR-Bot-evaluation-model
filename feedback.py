@@ -36,28 +36,28 @@ class FeedBack:
 
     #Done
     def wikipediaSearch(self):
-        result = ''
+        result = []
         wiki_wiki = wikipediaapi.Wikipedia('en')
         page_question = wiki_wiki.page(self.question)
         skills = self.skills
         
         for skill in skills:
             x = wiki_wiki.page(skill['name'])
-            result +=x.summary
-            result +='\n'
+            result.append(x.summary)
 
-        return page_question.summary + '\n' + result
+        result.append(page_question.summary)
+        return result
     
     #Done
     def googleSearch(self):
         skills = self.skills
         question = self.question
-        result = ''
+        result = []
 
         for skill in skills:
             query = 'site:' + skill['site'] + ' ' + question + ' + ' + skill['name']
             for j in search(query, tld="com", num=10, stop=1, pause=2): 
-                result +=str(j) 
+                result.append(str(j)) 
 
         return result
 
@@ -66,13 +66,13 @@ class FeedBack:
         p = Parser(self.skills)
         search_keys = p.parse('%20')
         links = []
-        result = ''
+        result = []
         for search_key in search_keys:
             link = 'https://www.coursera.org/search?query=' + search_key
             links.append(link)
         
         for link in links :
-            result+=link ; result+='\n'
+            result.append(link)
 
         return result
 
@@ -81,13 +81,13 @@ class FeedBack:
         p = Parser(self.skills)
         search_keys = p.parse('+')
         links = []
-        result = ''
+        result = []
         for search_key in search_keys:
             link = 'https://www.udemy.com/courses/search/?q=' + search_key
             links.append(link)
         
         for link in links :
-            result+=link ; result+='\n'
+            result.append(link)
 
         return result
     
@@ -96,13 +96,13 @@ class FeedBack:
         p = Parser(self.skills)
         search_keys = p.parse('%20')
         links = []
-        result = ''
+        result = []
         for search_key in search_keys:
             link = 'https://www.pluralsight.com/search?q=' + search_key
             links.append(link)
         
         for link in links :
-            result+=link ; result+='\n'
+            result.append(link)
 
         return result
 
@@ -111,26 +111,26 @@ class FeedBack:
         p = Parser(self.skills)
         search_keys = p.parse('%20')
         links = []
-        result = ''
+        result = []
         for search_key in search_keys:
             link = 'https://www.lynda.com/search?q=' + search_key
             links.append(link)
         
         for link in links :
-            result+=link ; result+='\n'
+            result.append(link)
 
         return result
 
     def search(self):
         token = self.token 
         if token == "hr_bot_2019_2020":    
-            result = ''
-            result += self.wikipediaSearch() ; result+= '\n'
-            result += self.googleSearch() ; result+= '\n'
-            result += self.courseraSearch() ; result+= '\n'
-            result += self.udemySearch() ; result+= '\n'
-            result += self.pluralsightSearch() ; result+= '\n'
-            result += self.lyndaSearch() ; result+= '\n'
+            result = []
+            result.append(self.wikipediaSearch())
+            result.append(self.googleSearch())
+            result.append(self.courseraSearch())
+            result.append(self.udemySearch())
+            result.append(self.pluralsightSearch())
+            result.append(self.lyndaSearch())
             
             return result
 
