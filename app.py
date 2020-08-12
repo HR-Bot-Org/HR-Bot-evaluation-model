@@ -9,21 +9,21 @@ app = Flask(__name__)
 def index():
     return "Machine Learning Models For HR-Bot"
 
-@app.route('/evaluate', methods=['POST'])
-def evaluation():
-    if not request.json or not 'token' in request.json or not 'answers' in request.json or not 'applicant_answer' in request.json:
-        abort(400)
+# @app.route('/evaluate', methods=['POST'])
+# def evaluation():
+#     if not request.json or not 'token' in request.json or not 'answers' in request.json or not 'applicant_answer' in request.json:
+#         abort(400)
 
-    token = str(request.json["token"])
-    if not(token == "hr_bot_2019_2020"):
-        abort(404)
-    else:
-        model_answers = list(request.json['answers'])
-        applicant_answer = str(request.json['applicant_answer'])
-        answers = model_answers
-        answers.append(applicant_answer)
-        score = evaluator.evalute_applicant_answer(answers)
-        return jsonify({'score': str(score)}), 200
+#     token = str(request.json["token"])
+#     if not(token == "hr_bot_2019_2020"):
+#         abort(404)
+#     else:
+#         model_answers = list(request.json['answers'])
+#         applicant_answer = str(request.json['applicant_answer'])
+#         answers = model_answers
+#         answers.append(applicant_answer)
+#         score = evaluator.evalute_applicant_answer(answers)
+#         return jsonify({'score': str(score)}), 200
 
 
 # intput example : 
@@ -47,17 +47,17 @@ def evaluation():
 # }
 @app.route('/interview/feedback', methods=['POST'])
 def feedback():
-    if not request.json or not 'data' in request.json:
+    if not request.json or not 'skills' in request.json or not 'token' in request.json :
         abort(400)
 
-    data = (request.json['data'])
-    f = FeedBack(data=data)
-    my_feedback = f.search()
-
-    if my_feedback is None:
+    token = str(request.json["token"])
+    if not (token == "hr_bot_2019_2020"):
         abort(404)
-        return "This should not be returned"
     else:
+        skills = (request.json['skills'])
+        f = FeedBack(skills=skills)
+        my_feedback = f.create_feedback()
+
         return jsonify({'feedback': my_feedback}), 200
 
 
